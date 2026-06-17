@@ -67,6 +67,7 @@ research/
 
 report/
   final_report.md
+  final_report.pdf
 ```
 
 ## Dataset
