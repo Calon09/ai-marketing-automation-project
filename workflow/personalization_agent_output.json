@@ -1,0 +1,13 @@
+{
+  "source": "User-provided n8n screenshot of Personalization Agent output",
+  "node": "Personalization Agent",
+  "execution_type": "single-node OpenAI personalization test",
+  "customer_id": "10133",
+  "email_subject": "Exclusive Discounts Await You at Our Wine Store!",
+  "email_preview_text": "Enjoy special offers tailored just for you on our finest wines.",
+  "email_body": "Hi there,\n\nWe know you appreciate a great selection of wine, and we've got something special just for you! Visit our store to enjoy exclusive promotional discounts on our premium wines. It's the perfect opportunity to stock up on your favorites or discover something new.\n\nDon't miss out on these limited-time offers designed with your taste in mind.\n\nCheers,\nThe Wine Team",
+  "call_to_action": "Visit Us In-Store for Exclusive Offers!",
+  "personalization_strategy": "Engagement with tailored in-store offers",
+  "recommended_channel": "Store",
+  "follow_up_timing": "1 week from email send"
+}

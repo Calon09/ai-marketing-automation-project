@@ -1,0 +1,22 @@
+{
+  "source": "User-provided n8n screenshot of Lead Analysis Agent output",
+  "node": "Lead Analysis Agent",
+  "execution_type": "single-node OpenAI test",
+  "customer_id": "10133",
+  "ai_lead_score": 88,
+  "intent_segment": "Medium Intent",
+  "purchase_likelihood": "High",
+  "recommended_action": "Engage with personalized offers via store visits.",
+  "recommended_offer_type": "Exclusive promotional discounts on preferred category (Wine).",
+  "reasoning_summary": "While the customer has strong spending and a good purchase history, recent web engagement is low. This suggests they are more inclined towards in-store shopping, thus a tailored offer in their preferred category is warranted.",
+  "key_positive_signals": [
+    "High total spend ($2349)",
+    "Multiple purchases (25 total, with 12 in-store)",
+    "Accepted previous campaigns"
+  ],
+  "key_risk_signals": [
+    "Only 2 web visits in the last month",
+    "Recent purchase recency (16 days)"
+  ],
+  "confidence_level": "Medium"
+}

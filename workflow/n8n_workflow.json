@@ -1,0 +1,233 @@
+{
+  "name": "AI Marketing Automation Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a680202b-c84a-46e8-90d6-0b04d508d65d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"customer_id\": \"10133\",\n  \"age_at_campaign\": \"44\",\n  \"education\": \"Graduation\",\n  \"marital_status\": \"Single\",\n  \"income\": \"93790\",\n  \"dependents\": \"0\",\n  \"recency_days\": \"16\",\n  \"total_spend\": \"2349\",\n  \"total_purchases\": \"25\",\n  \"web_purchases\": \"6\",\n  \"catalog_purchases\": \"7\",\n  \"store_purchases\": \"12\",\n  \"web_visits_month\": \"2\",\n  \"accepted_campaigns_total\": \"3\",\n  \"previous_campaign_accepted\": \"Yes\",\n  \"preferred_category\": \"Wine\",\n  \"preferred_channel\": \"Store\",\n  \"intent_segment\": \"High Intent\",\n  \"marketing_segment\": \"High Value Customer\",\n  \"baseline_lead_score\": \"95\",\n  \"purchase_likelihood\": \"High\",\n  \"suggested_action\": \"Sales outreach with a premium personalized offer\",\n  \"historical_response\": \"1\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        0
+      ],
+      "id": "64b529a7-8e56-4f4b-8a4e-d3ad7e86973f",
+      "name": "Customer Input"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"ai_lead_score\": 94,\n  \"intent_segment\": \"High Intent\",\n  \"purchase_likelihood\": \"High\",\n  \"recommended_action\": \"Send a premium personalized offer focused on the customer's preferred category.\",\n  \"recommended_offer_type\": \"Premium loyalty offer\",\n  \"reasoning_summary\": \"The customer shows high spend, recent activity, strong purchase volume, and previous campaign acceptance.\",\n  \"confidence_level\": \"High\"\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e66b8a6d-4ac0-4db9-b2c2-4d9b2f3d900f",
+      "name": "Mock Lead Analysis"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"email_subject\": \"A premium wine selection picked for you\",\n  \"email_preview_text\": \"Explore a tailored offer based on your recent preferences.\",\n  \"email_body\": \"We noticed your strong interest in wine selections and wanted to share a premium offer tailored to your preferences. This collection highlights quality, variety, and value for customers who enjoy discovering standout bottles. Take a look at the curated selection and choose the wines that fit your next occasion.\",\n  \"call_to_action\": \"View your personalized wine offer\",\n  \"personalization_strategy\": \"High-intent customer with strong wine preference and high purchase value.\",\n  \"recommended_channel\": \"Email\",\n  \"follow_up_timing\": \"Within 24 hours\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "776012e2-f203-4c94-bec8-f348800fbd86",
+      "name": "Mock Personalization"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "id"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are an AI marketing analyst working inside an automated n8n workflow.\n\nYour task is to analyze one customer record from a marketing campaign dataset and produce a structured lead/customer intent assessment.\n\nUse the rule-based baseline score as context, but do not simply repeat it. Refine the assessment by considering customer profile, purchase behavior, web engagement, campaign history, recency, and category preferences.\n\nCustomer input:\n\n- customer_id: {{$json.customer_id}}\n- age_at_campaign: {{$json.age_at_campaign}}\n- education: {{$json.education}}\n- marital_status: {{$json.marital_status}}\n- income: {{$json.income}}\n- dependents: {{$json.dependents}}\n- recency_days: {{$json.recency_days}}\n- total_spend: {{$json.total_spend}}\n- total_purchases: {{$json.total_purchases}}\n- web_purchases: {{$json.web_purchases}}\n- catalog_purchases: {{$json.catalog_purchases}}\n- store_purchases: {{$json.store_purchases}}\n- web_visits_month: {{$json.web_visits_month}}\n- accepted_campaigns_total: {{$json.accepted_campaigns_total}}\n- previous_campaign_accepted: {{$json.previous_campaign_accepted}}\n- preferred_category: {{$json.preferred_category}}\n- preferred_channel: {{$json.preferred_channel}}\n- baseline_lead_score: {{$json.baseline_lead_score}}\n- initial_purchase_likelihood: {{$json.purchase_likelihood}}\n- initial_marketing_segment: {{$json.marketing_segment}}\n- historical_response: {{$json.historical_response}}\n\nScoring guidance:\n\n- High-value recent customers with strong spending, multiple purchases, and past campaign acceptance should receive higher scores.\n- Customers with high web activity but limited conversion may be good nurture candidates rather than immediate sales leads.\n- Customers with very high recency_days are less active and should normally score lower unless they have very strong spending or campaign history.\n- Use the baseline score as an anchor, but adjust it when the behavioral evidence suggests a different level of intent.\n- Keep the final score between 1 and 100.\n\nSegment definitions:\n\n- \"High Intent\": ready for a direct offer or sales outreach.\n- \"Medium Intent\": suitable for personalized nurture and product education.\n- \"Low Intent\": suitable for awareness, reactivation, or low-frequency campaigns.\n\nReturn only valid JSON. Do not include markdown, explanations outside JSON, or extra text.\n\nRequired JSON schema:\n\n{\n  \"customer_id\": \"string\",\n  \"ai_lead_score\": 0,\n  \"intent_segment\": \"High Intent | Medium Intent | Low Intent\",\n  \"purchase_likelihood\": \"High | Medium | Low\",\n  \"recommended_action\": \"string\",\n  \"recommended_offer_type\": \"string\",\n  \"reasoning_summary\": \"string\",\n  \"key_positive_signals\": [\"string\", \"string\", \"string\"],\n  \"key_risk_signals\": [\"string\", \"string\"],\n  \"confidence_level\": \"High | Medium | Low\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "lead_analysis_schema",
+              "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_id\": { \"type\": \"string\" },\n    \"ai_lead_score\": { \"type\": \"number\" },\n    \"intent_segment\": {\n      \"type\": \"string\",\n      \"enum\": [\"High Intent\", \"Medium Intent\", \"Low Intent\"]\n    },\n    \"purchase_likelihood\": {\n      \"type\": \"string\",\n      \"enum\": [\"High\", \"Medium\", \"Low\"]\n    },\n    \"recommended_action\": { \"type\": \"string\" },\n    \"recommended_offer_type\": { \"type\": \"string\" },\n    \"reasoning_summary\": { \"type\": \"string\" },\n    \"key_positive_signals\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    },\n    \"key_risk_signals\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    },\n    \"confidence_level\": {\n      \"type\": \"string\",\n      \"enum\": [\"High\", \"Medium\", \"Low\"]\n    }\n  },\n  \"required\": [\n    \"customer_id\",\n    \"ai_lead_score\",\n    \"intent_segment\",\n    \"purchase_likelihood\",\n    \"recommended_action\",\n    \"recommended_offer_type\",\n    \"reasoning_summary\",\n    \"key_positive_signals\",\n    \"key_risk_signals\",\n    \"confidence_level\"\n  ],\n  \"additionalProperties\": false\n}"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        256,
+        224
+      ],
+      "id": "27b7b12f-aa73-45e0-bd83-e5ae78310f55",
+      "name": "Lead Analysis Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "function findLeadAnalysis(value) {\n  if (!value) return null;\n\n  if (\n    typeof value === 'object' &&\n    value.ai_lead_score !== undefined &&\n    value.intent_segment !== undefined &&\n    value.recommended_action !== undefined\n  ) {\n    return value;\n  }\n\n  if (typeof value === 'string') {\n    const trimmed = value.trim();\n    const start = trimmed.indexOf('{');\n    const end = trimmed.lastIndexOf('}');\n\n    if (start !== -1 && end !== -1 && end > start) {\n      try {\n        const parsed = JSON.parse(trimmed.slice(start, end + 1));\n        return findLeadAnalysis(parsed);\n      } catch (error) {\n        return null;\n      }\n    }\n  }\n\n  if (Array.isArray(value)) {\n    for (const item of value) {\n      const found = findLeadAnalysis(item);\n      if (found) return found;\n    }\n  }\n\n  if (typeof value === 'object') {\n    for (const item of Object.values(value)) {\n      const found = findLeadAnalysis(item);\n      if (found) return found;\n    }\n  }\n\n  return null;\n}\n\nconst customer = $(\"Customer Input\").all()[0].json;\nconst openAiOutput = $(\"Lead Analysis Agent\").all()[0].json;\n\nconst leadAnalysis = findLeadAnalysis(openAiOutput);\n\nif (!leadAnalysis) {\n  throw new Error(\"Could not find lead analysis fields in Lead Analysis Agent output.\");\n}\n\nreturn [\n  {\n    json: {\n      ...customer,\n      ...leadAnalysis\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        224
+      ],
+      "id": "391ac899-5575-4862-bb74-2c23230b4b67",
+      "name": "Parse Lead Analysis"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "id"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are an AI personalization agent for a marketing automation workflow.\n\nYour task is to generate a personalized marketing email based on a customer profile and the lead analysis produced by the previous AI agent.\n\nThe message should feel relevant, concise, and commercially useful. It should adapt the offer, tone, and call to action to the customer's predicted intent, preferred product category, preferred channel, and engagement behavior.\n\nCustomer input:\n\n- customer_id: {{$json.customer_id}}\n- age_at_campaign: {{$json.age_at_campaign}}\n- education: {{$json.education}}\n- marital_status: {{$json.marital_status}}\n- income: {{$json.income}}\n- dependents: {{$json.dependents}}\n- recency_days: {{$json.recency_days}}\n- total_spend: {{$json.total_spend}}\n- total_purchases: {{$json.total_purchases}}\n- web_purchases: {{$json.web_purchases}}\n- catalog_purchases: {{$json.catalog_purchases}}\n- store_purchases: {{$json.store_purchases}}\n- web_visits_month: {{$json.web_visits_month}}\n- accepted_campaigns_total: {{$json.accepted_campaigns_total}}\n- previous_campaign_accepted: {{$json.previous_campaign_accepted}}\n- preferred_category: {{$json.preferred_category}}\n- preferred_channel: {{$json.preferred_channel}}\n- marketing_segment: {{$json.marketing_segment}}\n- purchase_likelihood: {{$json.purchase_likelihood}}\n- baseline_lead_score: {{$json.baseline_lead_score}}\n\nAI lead analysis input:\n\n- ai_lead_score: {{$json.ai_lead_score}}\n- ai_intent_segment: {{$json.intent_segment}}\n- ai_purchase_likelihood: {{$json.purchase_likelihood}}\n- recommended_action: {{$json.recommended_action}}\n- recommended_offer_type: {{$json.recommended_offer_type}}\n- reasoning_summary: {{$json.reasoning_summary}}\n\nPersonalization rules:\n\n- If intent is High, use a confident and direct commercial tone.\n- If intent is Medium, use a helpful nurture tone with a clear reason to explore.\n- If intent is Low, use a softer reactivation or awareness tone.\n- Reference the preferred category in a natural way.\n- Do not mention internal scoring, AI, algorithms, segmentation labels, or model reasoning to the customer.\n- Do not invent personal names, private details, or claims not supported by the input data.\n- Keep the email under 160 words.\n- Include one clear call to action.\n\nReturn only valid JSON. Do not include markdown, explanations outside JSON, or extra text.\n\nRequired JSON schema:\n\n{\n  \"customer_id\": \"string\",\n  \"email_subject\": \"string\",\n  \"email_preview_text\": \"string\",\n  \"email_body\": \"string\",\n  \"call_to_action\": \"string\",\n  \"personalization_strategy\": \"string\",\n  \"recommended_channel\": \"Email | Web | Catalog | Store\",\n  \"follow_up_timing\": \"string\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "personalization_schema",
+              "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_id\": { \"type\": \"string\" },\n    \"email_subject\": { \"type\": \"string\" },\n    \"email_preview_text\": { \"type\": \"string\" },\n    \"email_body\": { \"type\": \"string\" },\n    \"call_to_action\": { \"type\": \"string\" },\n    \"personalization_strategy\": { \"type\": \"string\" },\n    \"recommended_channel\": {\n      \"type\": \"string\",\n      \"enum\": [\"Email\", \"Web\", \"Catalog\", \"Store\"]\n    },\n    \"follow_up_timing\": { \"type\": \"string\" }\n  },\n  \"required\": [\n    \"customer_id\",\n    \"email_subject\",\n    \"email_preview_text\",\n    \"email_body\",\n    \"call_to_action\",\n    \"personalization_strategy\",\n    \"recommended_channel\",\n    \"follow_up_timing\"\n  ],\n  \"additionalProperties\": false\n}"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        224
+      ],
+      "id": "4b43b5cb-a498-4762-af1e-e284f8918626",
+      "name": "Personalization Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "function findPersonalization(value) {\n  if (!value) return null;\n\n  if (\n    typeof value === 'object' &&\n    value.email_subject !== undefined &&\n    value.email_body !== undefined &&\n    value.call_to_action !== undefined\n  ) {\n    return value;\n  }\n\n  if (typeof value === 'string') {\n    const trimmed = value.trim();\n    const start = trimmed.indexOf('{');\n    const end = trimmed.lastIndexOf('}');\n\n    if (start !== -1 && end !== -1 && end > start) {\n      try {\n        const parsed = JSON.parse(trimmed.slice(start, end + 1));\n        return findPersonalization(parsed);\n      } catch (error) {\n        return null;\n      }\n    }\n  }\n\n  if (Array.isArray(value)) {\n    for (const item of value) {\n      const found = findPersonalization(item);\n      if (found) return found;\n    }\n  }\n\n  if (typeof value === 'object') {\n    for (const item of Object.values(value)) {\n      const found = findPersonalization(item);\n      if (found) return found;\n    }\n  }\n\n  return null;\n}\n\nconst mergedCustomer = $(\"Parse Lead Analysis\").all()[0].json;\nconst openAiOutput = $(\"Personalization Agent\").all()[0].json;\n\nconst personalization = findPersonalization(openAiOutput);\n\nif (!personalization) {\n  throw new Error(\"Could not find personalization fields in Personalization Agent output.\");\n}\n\nreturn [\n  {\n    json: {\n      ...mergedCustomer,\n      ...personalization\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        224
+      ],
+      "id": "899d2bca-fc19-4513-8bc2-26d55a2159c6",
+      "name": "Parse Personalization"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Customer Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Input": {
+      "main": [
+        [
+          {
+            "node": "Lead Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Lead Analysis": {
+      "main": [
+        [
+          {
+            "node": "Mock Personalization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Lead Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Lead Analysis": {
+      "main": [
+        [
+          {
+            "node": "Personalization Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personalization Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Personalization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "tags": []
+}
